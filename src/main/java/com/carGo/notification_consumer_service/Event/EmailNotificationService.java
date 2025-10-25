@@ -2,7 +2,9 @@ package com.carGo.notification_consumer_service.Event;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EmailNotificationService {
     // define the properties
     private final JavaMailSender mailSender;
