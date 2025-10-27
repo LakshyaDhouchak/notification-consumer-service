@@ -1,5 +1,6 @@
 <div align="center">
-# 📧 Event-Driven Email Dispatcher
+  
+# 📧  **🚀 Event-Driven Email Dispatcher**
 
 <div align="center">
   <img src="https://img.shields.io/badge/Spring_Boot-3.x-success.svg" alt="Spring Boot 3.x">
