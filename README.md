@@ -39,5 +39,87 @@ The service uses **centralized global exception handling** for robust error mana
 
 **Sample Error Log:**
 ```bash
+
 CRITICAL ERROR: Failed to send email for booking 12345
 org.springframework.mail.MailSendException: Mail server connection failed...
+
+```
+---
+
+# 📨 Notification Consumer Service
+
+The Notification Consumer Service is a dedicated microservice responsible for processing booking confirmation events from **Apache Kafka** and dispatching corresponding email notifications. It employs a robust **no-drop strategy** to ensure guaranteed email delivery through Kafka's built-in retry mechanism.
+
+## ⚙️ Event Processing Flow
+
+The consumer follows a critical four-step flow for every event:
+
+1.  **Consume Event:** The **`BookingConfirmationConsumer`** listens to the **`Booking-Confirmation`** topic.
+2.  **Deserialize:** The raw message is deserialized into a **`BookingConfirmationEvent`** Java object.
+3.  **Dispatch:** The event is passed to the **`EmailNotificationService`** for sending the email.
+4.  **Handle Failure:** If the email dispatch fails (e.g., SMTP error), a **`RuntimeException`** is thrown. This signals the Kafka container to **retry** the message delivery, ensuring fault tolerance.
+
+---
+
+## 🛠 Project Setup & Quick Start
+
+Get the notification engine listening for events in minutes!
+
+### 1. Prerequisites 📋
+
+Ensure you have the following installed and accessible:
+
+* **Java 20+**
+* **Apache Maven 3.6+**
+* An accessible **Apache Kafka** cluster (default configuration points to `localhost:9092`).
+* A dedicated **SMTP account** (e.g., Gmail with a secure **App Password**).
+
+### 2. Key Configuration Points (`application.properties`) ⚙️
+
+Configuration is vital for connectivity and data processing. Review and update the following properties in `src/main/resources/application.properties`:
+
+| Section | Key Property | Value Example | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Kafka** | `spring.kafka.consumer.group-id` | `notification-dispatchers-v1` | Unique consumer group for load balancing. |
+| **Kafka** | `spring.kafka.consumer.bootstrap-servers` | `localhost:9092,...` | List of Kafka broker addresses. |
+| **Kafka** | `spring.json.value.default.type` | `com.carGo.BookingConfirmationEvent` | **Crucial:** Specifies the Java class for JSON deserialization. |
+| **Email** | `spring.mail.username` | `cargounofficial@gmail.com` | Sender email address. |
+| **Email** | `spring.mail.password` | `dayrkqlhrrdjeuul` | **SMTP Secret:** *Must* be an **App Password** for Gmail or equivalent. |
+
+### 3. Build and Run 🚀
+
+Follow these steps to build and start the service:
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/your-org/notification-consumer-service.git](https://github.com/your-org/notification-consumer-service.git) # Use your actual repo URL
+    cd notification-consumer-service
+    ```
+2.  **Build the Project:**
+    ```bash
+    mvn clean install
+    ```
+3.  **Start the Service:**
+    ```bash
+    mvn spring-boot:run # Starts on http://localhost:8082
+    ```
+The service will immediately establish connections to Kafka, ready to consume events from the **`Booking-Confirmation`** topic.
+
+---
+
+## ⚠️ Fault Tolerance: The No-Drop Strategy
+
+We prioritize **guaranteed delivery** of essential booking confirmations. The service implements an explicit failure handling mechanism in the **`BookingConfirmationConsumer`** to trigger Kafka retries instead of losing messages.
+
+```java
+// Snippet from BookingConfirmationConsumer.java (Failure Handling)
+
+catch (Exception e) {
+    System.err.println("CRITICAL ERROR: Failed to send email for booking " + event.getBookingId());
+    e.printStackTrace();
+    
+    // **This is the key:** Throwing a RuntimeException signals Kafka to trigger a retry.
+    throw new RuntimeException("Email dispatch failed, initiating Kafka retry.", e); 
+}
+```
+---
