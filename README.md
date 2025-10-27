@@ -155,3 +155,36 @@ Ensure the topic **`Booking-Confirmation`** is created with proper partitions an
   "bookingSummary": "Hyundai Venue Rental - 2 days",
   "timeStamp": "2024-09-28T10:00:00Z"
 }
+```
+
+---
+
+## 📌 Conclusion: A Game-Changing Strategy
+
+The core game-changing strategy for a CNS is to shift from being a mere delivery mechanism (just sending an email or push) to being a personalized, contextual intelligence layer that enhances the customer experience.
+
+---
+
+## 👋 Get in Touch & Contribute!
+
+We're an open-source project and welcome community support and contributions!
+
+| Resource | Link/Details |
+| :--- | :--- |
+| **Repo** | `https://github.com/LakshyaDhouchak/notification-consumer-service` |
+| **Issues** | **`https://github.com/LakshyaDhouchak/notification-consumer-service/issues`** |
+| **Email** | `lakshya10171@gmail.com` |
+
+### 📄 License
+
+This project is **MIT licensed**. See the `LICENSE` file for full details. Feel free to fork, modify, and rock!
+
+**Stars & Forks:** Help us grow – star this repo! ⭐
+
+<p align="center">
+Built with ❤️ by Lakshya – Happy Notifying!!
+</p>
+
+***
+*Updated: October 2024 | Version: 0.0.1-SNAPSHOT*
+
