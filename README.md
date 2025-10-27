@@ -122,3 +122,36 @@ catch (Exception e) {
     throw new RuntimeException("Email dispatch failed, initiating Kafka retry.", e); 
 }
 ```
+# ⚙️ Configuration Essentials
+
+Edit `src/main/resources/application.properties` to configure the notification service.
+
+| Area | Key Properties | Default Values (Change These!) |
+| :--- | :--- | :--- |
+| **Kafka** | `spring.kafka.consumer.bootstrap-servers` | `localhost:9092,localhost:9094,localhost:9096,localhost:9098` |
+|  | `spring.kafka.consumer.group-id` | `notification-dispatchers-v1` |
+| **Email (Gmail)** | `spring.mail.username` | `cargounofficial@gmail.com` |
+|  | `spring.mail.password` | `your-app-password` |
+| **Server** | `server.port` | `8082` |
+| **Logging** | `logging.level.com.carGo` | `DEBUG` |
+
+---
+
+## 🧩 Kafka Setup (4 Brokers)
+
+Use **Docker Compose** for a multi-broker Kafka cluster (as defined in your Car-Go project).  
+Ensure the topic **`Booking-Confirmation`** is created with proper partitions and replication.
+
+---
+
+## 🧠 Event Entities
+
+✅ **BookingConfirmationEvent** – Core event example:
+
+```json
+{
+  "bookingId": "B123",
+  "userEmail": "user@example.com",
+  "bookingSummary": "Hyundai Venue Rental - 2 days",
+  "timeStamp": "2024-09-28T10:00:00Z"
+}
