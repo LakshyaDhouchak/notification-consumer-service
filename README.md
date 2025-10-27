@@ -1,41 +1,43 @@
+
+# 📧 Car-Go Notification Consumer Service: Event-Driven Email Dispatcher
+
 <div align="center">
-
-# ⚡ Car-Go: Real-Time Notification Engine (Consumer Service)
-
-[![Java](https://img.shields.io/badge/Java-20+-blue.svg)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-green.svg)](https://spring.io/projects/spring-boot)
-[![Kafka](https://imgiums.io/badge/Apache%20Kafka-Reliable%20Events-lightgrey.svg)](https://kafka.apache.org/)
-[![Spring Mail](https://img.shields.io/badge/Email%20Dispatch-Spring%20Mail-orange.svg)](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#mail)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-**The dedicated, highly resilient microservice ensuring zero dropped notifications. We consume Kafka events and instantly dispatch transactional emails for the Car-Go platform.**
-
-> *Decoupled, dependable, and designed for scale. When a booking happens, we make sure the customer knows—instantly.*
-
+  <img src="https://img.shields.io/badge/Spring_Boot-3.x-success.svg" alt="Spring Boot 3.x">
+  <img src="https://img.shields.io/badge/Kafka-Event--Driven-blue.svg" alt="Kafka Event-Driven">
+  <img src="https://img.shields.io/badge/Fault_Tolerance-Enabled-critical.svg" alt="Fault Tolerance Enabled">
+  <img src="https://img.shields.io/badge/Service-Microservice-informational.svg" alt="Microservice">
 </div>
 
-***
+> A **scalable Spring Boot microservice** for consuming Kafka events and dispatching email notifications. Seamlessly integrates with Car-Go for booking confirmations, ensuring **fault-tolerant, real-time communication!**
+>
+> Elevate user experience with instant email alerts for bookings. From Kafka events to inboxes – **notify smarter, scale faster!**
 
-## 🎯 Mission Statement & Overview
+---
 
-The `notification-consumer-service` is the dedicated communication layer of the Car-Go architecture. It completely **decouples** the core booking logic from the time-consuming process of sending emails. This ensures the booking API is blazing fast and provides **ultimate resilience** against service outages through **Kafka's built-in retry mechanism**.
+## 🌟 Key Features
 
-It uses **Spring for Apache Kafka** to process events and **Spring Boot Starter Mail** for reliable email dispatching via Gmail's SMTP.
-
-***
-
-## ✨ Core Technology & Features
-
-| Feature | Component | Benefit to the System |
+| Feature | Description | Implementation Detail |
 | :--- | :--- | :--- |
-| **Event Ingestion** | `BookingConfirmationConsumer` | Uses **Spring Kafka** to passively consume events, maximizing throughput and ensuring **Asynchronous Processing**. |
-| **Guaranteed Delivery** | `RuntimeException` Handler | **Fault Tolerance:** Any temporary failure (e.g., SMTP timeout) triggers a **Kafka retry**, preventing lost notifications. |
-| **Data Mapping** | `JsonDeserializer` | Seamlessly converts raw JSON messages into the typed `BookingConfirmationEvent` DTO. |
-| **Extensibility** | `EmailNotificationService` | Ready to be extended for other channels like SMS (Twilio) or push notifications (Firebase). |
-| **Monitoring** | `spring-boot-starter-actuator` | Built-in endpoints for instant health checks and service monitoring. |
+| **📨 Event-Driven Notifications** | Consumes `BookingConfirmationEvent` from Kafka topic **`Booking-Confirmation`** for real-time processing. | Uses Spring Kafka listeners. |
+| **✉️ Email Dispatch** | Sends personalized confirmation emails via **Gmail SMTP** with booking details and timestamps. | Utilizes **Spring Mail** (`SimpleMailMessage`) for plain text reliability. |
+| **🔄 Fault Tolerance & Retries** | Automatic Kafka retries on email failures, with comprehensive error logging. | Throwing a **`RuntimeException`** triggers the configurable Kafka retry mechanism. |
+| **📊 Scalability** | Supports multiple consumer instances for robust load balancing. | Uses Kafka consumer group **`notification-dispatchers-v1`**. |
+| **🛡️ Security & Validation** | Secure SMTP configuration, input validation for events, and centralized exception handling. | Uses **App Passwords** for Gmail; extensible to OAuth2. |
+| **📈 Monitoring** | Provides health checks and detailed operational metrics. | Enabled via **Spring Boot Actuator** and debug logging. |
 
-***
+---
 
-## 🗂 Project Structure & Flow
+## ⚠️ Exception Handling Strategy
 
-The service maintains a concise, highly focused structure, adhering to Spring Boot best practices:
+The service uses **centralized global exception handling** for robust error management, ensuring: **Reliable event processing**, **Detailed logging**, and **No data loss** (failed events are retried via Kafka).
+
+| Exception Type | Action Taken | Result |
+| :--- | :--- | :--- |
+| **`RuntimeException`** | For email dispatch failures (e.g., SMTP errors) $\rightarrow$ **Triggers Kafka retry** and logs critical errors. | **Guaranteed Delivery**. |
+| **`JsonProcessingException`** | For malformed Kafka events $\rightarrow$ **Skips processing** and logs warnings. | **Service Stability**. |
+| **`MailException`** | For email-specific issues (e.g., invalid recipient) $\rightarrow$ Logs critical error with stack trace. | **Auditability** $\text{/}$ **Retry**. |
+
+**Sample Error Log:**
+```bash
+CRITICAL ERROR: Failed to send email for booking 12345
+org.springframework.mail.MailSendException: Mail server connection failed...
