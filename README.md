@@ -189,5 +189,5 @@ Built with ❤️ by Lakshya – Happy Notifying!!
 </p>
 
 ***
-*Updated: October 2024 | Version: 0.0.1-SNAPSHOT*
+*Updated: October 2025| Version: 0.0.1-SNAPSHOT*
 
