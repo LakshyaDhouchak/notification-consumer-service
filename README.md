@@ -106,3 +106,63 @@ catch (Exception e) {
     // ... logging error
     throw new RuntimeException("Email dispatch failed, initiating Kafka retry.", e);
 }
+
+# 🚀 Notification Consumer Service — Car-Go Integration
+
+A **Spring Boot Kafka consumer microservice** for dispatching **email notifications** (Booking Confirmations, Rewards, and more) as part of the **Car-Go ecosystem**.  
+This service listens to Kafka topics and sends notifications using Gmail SMTP — fully extensible to SMS, push, or loyalty updates.
+
+---
+
+## 🔗 Integration Details
+
+| Detail | Value |
+| :--- | :--- |
+| **Kafka Topic** | `Booking-Confirmation` |
+| **Consumer Group** | `notification-dispatchers-v1` |
+| **Event Type** | `BookingConfirmationEvent (JSON)` |
+| **Email Provider** | Gmail SMTP |
+| **Security Note** | Use **app passwords** for Gmail; extend with OAuth for production. |
+
+---
+
+## 📨 Event Processing Flow
+
+| Step | Description | Notes |
+| :--- | :--- | :--- |
+| **1. Consume Event** | Listens to Kafka topic for `BookingConfirmationEvent` (bookingId, userEmail, bookingSummary, timeStamp). | Group ID ensures load balancing. |
+| **2. Validate & Log** | Prints event details; validates email format. | Skips invalid events. |
+| **3. Send Email** | Constructs and dispatches email via `EmailNotificationService`. | Uses `SimpleMailMessage` for plain text. |
+| **4. Handle Success/Failure** | Logs success; on failure, throws `RuntimeException` for Kafka retry. | Retries up to Kafka’s default (configurable). |
+
+---
+
+## 🚀 Notification Types (Extensible)
+
+✅ **Booking Confirmation** – Default email for new bookings.  
+🔄 **Future Expansions** – Add events for cancellations, reminders, or loyalty rewards.  
+📱 **Multi-Channel** – Ready for SMS (Twilio) or push notifications (Firebase) by extending `NotificationService`.
+
+---
+
+## 🛠 Project Setup & Quick Start
+
+Get the Notification Consumer Service running alongside **Car-Go** and **Kafka**!
+
+### 📋 Prerequisites
+
+- Java 20+  
+- Maven 3.6+  
+- Apache Kafka 2.8+ (4 brokers)  
+- Gmail account with app password (SMTP access)
+
+---
+
+### ⚙️ Build and Run
+
+```bash
+git clone https://github.com/your-org/notification-consumer-service.git
+cd notification-consumer-service
+mvn clean install
+mvn spring-boot:run  # Starts on http://localhost:8082
+
