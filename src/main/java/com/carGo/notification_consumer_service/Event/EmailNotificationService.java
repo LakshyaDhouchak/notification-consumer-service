@@ -17,7 +17,7 @@ public class EmailNotificationService {
     // define the methord
     public void sendEmail(BookingConfirmationEvent event){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("lakshyalath@gmail.com");
+        message.setFrom("cargounofficial@gmail.com");
         message.setTo(event.getUserEmail());
         message.setSubject("Car-Go Booking Confirmed! ID: " + event.getBookingId());
         String emailBody = String.format(
