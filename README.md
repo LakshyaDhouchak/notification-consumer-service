@@ -82,7 +82,7 @@ Configuration is vital for connectivity and data processing. Review and update t
 | :--- | :--- | :--- | :--- |
 | **Kafka** | `spring.kafka.consumer.group-id` | `notification-dispatchers-v1` | Unique consumer group for load balancing. |
 | **Kafka** | `spring.kafka.consumer.bootstrap-servers` | `localhost:9092,...` | List of Kafka broker addresses. |
-| **Kafka** | `spring.json.value.default.type` | `com.carGo.BookingConfirmationEvent` | **Crucial:** Specifies the Java class for JSON deserialization. |
+| **Kafka** | `spring.json.value.default.type` | `com.carGo...BookingConfirmationEvent` | **Crucial:** Specifies the Java class for JSON deserialization. |
 | **Email** | `spring.mail.username` | `cargounofficial@gmail.com` | Sender email address. |
 | **Email** | `spring.mail.password` | `dayrkqlhrrdjeuul` | **SMTP Secret:** *Must* be an **App Password** for Gmail or equivalent. |
 
@@ -92,7 +92,7 @@ Follow these steps to build and start the service:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/your-org/notification-consumer-service.git](https://github.com/your-org/notification-consumer-service.git) # Use your actual repo URL
+    git clone [https://github.com/LakshyaDhouchak/notification-consumer-service](https://github.com/LakshyaDhouchak/notification-consumer-service)
     cd notification-consumer-service
     ```
 2.  **Build the Project:**
@@ -112,7 +112,7 @@ The service will immediately establish connections to Kafka, ready to consume ev
 We prioritize **guaranteed delivery** of essential booking confirmations. The service implements an explicit failure handling mechanism in the **`BookingConfirmationConsumer`** to trigger Kafka retries instead of losing messages.
 
 ```java
-// Snippet from BookingConfirmationConsumer.java (Failure Handling)
+// Logic inside BookingConfirmationConsumer.java (Failure Handling)
 
 catch (Exception e) {
     System.err.println("CRITICAL ERROR: Failed to send email for booking " + event.getBookingId());
@@ -122,4 +122,3 @@ catch (Exception e) {
     throw new RuntimeException("Email dispatch failed, initiating Kafka retry.", e); 
 }
 ```
----
