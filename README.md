@@ -63,3 +63,6 @@ Centralized global exception handling ensures robust error management:
 - No data loss – failed events retried via Kafka  
 
 **Sample Error Log:**
+
+CRITICAL ERROR: Failed to send email for booking 12345
+org.springframework.mail.MailSendException: Mail server connection failed...
