@@ -1,4 +1,4 @@
-
+<div align="center">
 # 📧 Event-Driven Email Dispatcher
 
 <div align="center">
