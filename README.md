@@ -14,6 +14,7 @@
 > Elevate user experience with instant email alerts for bookings. From Kafka events to inboxes – **notify smarter, scale faster!**
 
 </div>
+
 ---
 
 ## 🌟 Key Features
