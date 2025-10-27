@@ -30,7 +30,8 @@ public class BookingConfirmationConsumer {
             emailService.sendEmail(event);
             System.out.println("Successfully processed and sent confirmation for ID: " + event.getBookingId());
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.err.println("CRITICAL ERROR: Failed to send email for booking " + event.getBookingId());
             e.printStackTrace();
             throw new RuntimeException("Email dispatch failed, initiating Kafka retry.", e);
